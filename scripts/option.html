@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grammar Checker Settings</title>
+    <style>
+        body {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #1a73e8;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .option-group {
+            margin-bottom: 20px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .option-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .option-label {
+            flex-grow: 1;
+        }
+
+        .option-description {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        select, input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+        }
+
+        .custom-words {
+            width: 100%;
+            height: 100px;
+            margin-top: 10px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .save-button {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            float: right;
+        }
+
+        .save-button:hover {
+            background-color: #1557b0;
+        }
+
+        .status-message {
+            display: none;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Grammar Checker Settings</h1>
+        <p>Customize your writing assistant</p>
+    </div>
+
+    <div class="section">
+        <h2>Writing Preferences</h2>
+        <div class="option-group">
+            <div class="option-item">
+                <div class="option-label">
+                    <strong>Default Writing Style</strong>
+                    <div class="option-description">Choose your preferred writing style</div>
+                </div>
+                <select id="defaultStyle">
+                    <option value="professional">Professional</option>
+                    <option value="casual">Casual</option>
+                    <option value="academic">Academic</option>
+                </select>
+            </div>
+
+            <div class="option-item">
+                <div class="option-label">
+                    <strong>Language Preference</strong>
+                    <div class="option-description">Select your primary writing language</div>
+                </div>
+                <select id="language">
+                    <option value="en-US">English (US)</option>
+                    <option value="en-GB">English (UK)</option>
+                    <option value="en-AU">English (Australia)</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Custom Dictionary</h2>
+        <div class="option-group">
+            <div class="option-item">
+                <div class="option-label">
+                    <strong>Custom Words</strong>
+                    <div class="option-description">Add your own words (one per line)</div>
+                </div>
+            </div>
+            <textarea class="custom-words" id="customWords" placeholder="Enter custom words here..."></textarea>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Check Settings</h2>
+        <div class="option-group">
+            <div class="option-item">
+                <div class="option-label">
+                    <strong>Check Frequency</strong>
+                    <div class="option-description">How often to check your writing</div>
+                </div>
+                <select id="checkFrequency">
+                    <option value="immediate">Real-time</option>
+                    <option value="delayed">After typing pause</option>
+                    <option value="manual">Manual only</option>
+                </select>
+            </div>
+
+            <div class="option-item">
+                <div class="option-label">
+                    <strong>Suggestion Display</strong>
+                    <div class="option-description">How suggestions are shown</div>
+                </div>
+                <select id="suggestionDisplay">
+                    <option value="inline">Inline with text</option>
+                    <option value="sidebar">Side panel</option>
+                    <option value="popup">Popup on hover</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div id="statusMessage" class="status-message"></div>
+    <button class="save-button" id="saveSettings">Save Settings</button>
+
+    <script src="options.js"></script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grammar Checker</title>
+    <style>
+        body {
+            width: 300px;
+            padding: 15px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .logo {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+
+        .title {
+            margin: 0;
+            color: #1a73e8;
+            font-size: 18px;
+        }
+
+        .status {
+            margin: 10px 0;
+            padding: 8px;
+            border-radius: 4px;
+            background-color: #e8f0fe;
+            color: #1a73e8;
+        }
+
+        .controls {
+            margin: 15px 0;
+        }
+
+        .switch-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #1a73e8;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        .style-select {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .stats {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .footer {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+            text-align: center;
+        }
+
+        .footer a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="icons/icon48.png" alt="Logo" class="logo">
+        <h1 class="title">Grammar Checker</h1>
+    </div>
+
+    <div class="status">
+        Active and checking your writing
+    </div>
+
+    <div class="controls">
+        <div class="switch-container">
+            <span>Grammar Checking</span>
+            <label class="switch">
+                <input type="checkbox" id="grammarToggle" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="switch-container">
+            <span>Spell Checking</span>
+            <label class="switch">
+                <input type="checkbox" id="spellToggle" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="switch-container">
+            <span>Style Suggestions</span>
+            <label class="switch">
+                <input type="checkbox" id="styleToggle" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <select class="style-select" id="writingStyle">
+            <option value="professional">Professional</option>
+            <option value="casual">Casual</option>
+            <option value="academic">Academic</option>
+        </select>
+    </div>
+
+    <div class="stats">
+        <div class="stat-item">
+            <span>Issues Found Today:</span>
+            <span id="issuesCount">0</span>
+        </div>
+        <div class="stat-item">
+            <span>Improvements Made:</span>
+            <span id="improvementsCount">0</span>
+        </div>
+    </div>
+
+    <div class="footer">
+        <a href="options.html" target="_blank">Advanced Settings</a>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

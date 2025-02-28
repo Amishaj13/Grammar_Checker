@@ -1,0 +1,653 @@
+/* Main floating button */
+.grammar-check-button {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #15C39A;  /* Grammarly's green color */
+    color: white;  /* Changed from red to white for better visibility */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    z-index: 10000;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: bold;
+    font-size: 18px;
+    visibility: visible;  /* explicitly set visibility */
+    opacity: 1;  /* ensure full opacity */
+    transition: transform 0.2s;
+}
+
+.grammar-check-button.hidden {
+    display: none;
+}
+
+.error-count-circle {
+    color: white;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/* Suggestions panel */
+.suggestions-panel {
+    position: fixed;
+    right: 24px;
+    bottom: 80px;  /* Reduced to match widget positioning */
+    width: 380px;
+    max-height: 70vh;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 9999;
+    overflow: hidden;
+    display: none;
+}
+
+.panel-header {
+    padding: 16px;
+    border-bottom: 1px solid #E9EEF2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.panel-header h2 {
+    font-size: 16px;
+    color: #1F243C;
+    margin: 0;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.error-count, .suggestion-count {
+    min-width: 24px;
+    text-align: center;
+}
+
+/* Loading animation */
+@keyframes loadingDots {
+    0%, 20% { content: "."; }
+    40%, 60% { content: ".."; }
+    80%, 100% { content: "..."; }
+}
+
+.error-count:empty::after,
+.suggestion-count:empty::after {
+    content: "...";
+    animation: loadingDots 1.5s infinite;
+}
+
+/* Suggestion Panel Styles */
+.suggestions-container {
+    padding: 16px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.suggestion-item {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 8px;
+    animation: slideIn 0.3s ease-out;
+}
+
+.suggestion-type {
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.suggestion-message {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.suggestion-replacements {
+    display: flex;
+    color: #333;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.mistake {
+    background-color: #ffd7d7;
+    text-decoration: wavy underline red;
+    position: relative;
+    cursor: help;
+  }
+
+  .suggestion-tooltip {
+    display: none;
+    position: absolute;
+    background-color: #333;
+    color: white;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    z-index: 1000;
+    max-width: 250px;
+  }
+
+.replacement-btn {
+    padding: 6px 12px;
+    background: #f5f7fa;
+    border: 1px solid #e0e3e7;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #2d3748;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.replacement-btn:hover {
+    background: #edf2f7;
+    border-color: #cbd5e0;
+}
+
+.replacement-btn.active {
+    background: #15C39A;
+    color: white;
+    border-color: #15C39A;
+}
+
+/* Suggestion Actions */
+/* sssssss */
+
+.accept-btn {
+    padding: 8px 16px;
+    background: #15C39A;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.accept-btn:hover {
+    background: #0ea885;
+}
+
+.dismiss-btn {
+    padding: 8px 16px;
+    background: white;
+    color: #4a5568;
+    border: 1px solid #e0e3e7;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.dismiss-btn:hover {
+    background: #f5f7fa;
+    border-color: #cbd5e0;
+}
+
+/* Empty State */
+.suggestions-empty {
+    padding: 24px;
+    text-align: center;
+    color: #718096;
+}
+
+/* Scrollbar Styling */
+.suggestions-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.suggestions-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.suggestions-container::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 4px;
+}
+
+.suggestions-container::-webkit-scrollbar-thumb:hover {
+    background: #a0aec0;
+}
+
+/* Animation for new suggestions */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Hover states and focus styles */
+.suggestion-item:hover {
+    background: #f8f9fa;
+}
+
+.suggestion-item:focus-within {
+    outline: 2px solid #15C39A;
+    outline-offset: -2px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .suggestions-container {
+        max-width: 100%;
+        margin: 0 8px;
+    }
+
+    .suggestion-replacements {
+        flex-direction: column;
+    }
+
+    .replacement-btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Individual suggestion styles */
+.suggestion-item:hover {
+    background: #F8F9FB;
+}
+
+.suggestion-type {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #6D758D;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.suggestion-context {
+    font-family: monospace;
+    padding: 8px;
+    background: #F5F7FA;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #1F243C;
+}
+
+/* Text highlighting styles */
+.text-highlight {
+    position: relative;
+    cursor: pointer;
+}
+
+.text-highlight.spelling {
+    background: rgba(235, 77, 75, 0.12);
+    border-bottom: 2px solid #EB4D4B;
+}
+
+.text-highlight.grammar {
+    background: rgba(21, 195, 154, 0.12);
+    border-bottom: 2px solid #130ce0;
+}
+
+.text-highlight.style {
+    background: rgba(55, 125, 255, 0.12);
+    border-bottom: 2px solid #e1a115;
+}
+
+/* Suggestion tooltip */
+.suggestion-tooltip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    padding: 12px;
+    min-width: 240px;
+    z-index: 10001;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.suggestion-tooltip::before {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 16px;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid white;
+}
+
+.tooltip-header {
+    font-size: 14px;
+    color: #1F243C;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.tooltip-suggestions {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.tooltip-suggestion {
+    padding: 6px 12px;
+    border-radius: 4px;
+    color: #1F243C;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.tooltip-suggestion:hover {
+    background: #F5F7FA;
+}
+
+/* Navigation buttons */
+.nav-buttons {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px;
+    border-top: 1px solid #E9EEF2;
+}
+
+.nav-button {
+    padding: 8px 16px;
+    border: 1px solid #E9EEF2;
+    border-radius: 4px;
+    background: white;
+    color: #6D758D;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.nav-button:hover {
+    background: #F5F7FA;
+}
+
+/* Settings button */
+.settings-button {
+    background: none;
+    border: none;
+    padding: 8px;
+    color: #6D758D;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.settings-button:hover {
+    background: #F5F7FA;
+}
+
+/* Animations */
+.suggestions-panel {
+    animation: slideIn 0.2s ease-out;
+}
+
+.suggestion-highlight {
+    background-color: rgba(21, 195, 154, 0.1);
+    border-bottom: 2px solid #15C39A;
+}
+
+/* Grammar check widget */
+.grammar-check-widget {
+    position: fixed !important;  /* Force fixed positioning */
+    right: 24px !important;     /* Force right positioning */
+    bottom: 84px !important;   /* Reduced from 84px to be closer to button */
+    width: 380px;
+    max-height: 70vh;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 9999;
+    overflow: hidden;
+    display: none;
+}
+
+.grammar-check-widget.hidden {
+    display: none;
+}
+
+.grammar-check-widget.visible {
+    display: block;
+}
+
+/* Widget header */
+.widget-header {
+    padding: 16px;
+    border-bottom: 1px solid #E9EEF2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.widget-header h2 {
+    font-size: 16px;
+    color: #1F243C;
+    margin: 0;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Widget content */
+.widget-content {
+    padding: 16px;
+    max-height: calc(70vh - 60px); /* Subtract header height */
+    overflow-y: auto;
+}
+.close-button {
+    padding: 4px 8px;
+    cursor: pointer;
+    color: #6D758D;
+    font-size: 16px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.close-button:hover {
+    background: #F5F7FA;
+    color: #333;
+}
+
+/* Widget footer */
+.widget-footer {
+    padding: 12px 16px;
+    border-top: 1px solid #E9EEF2;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+/* Suggestion Panel Styles */
+.suggestions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.suggestions-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.suggestions-header .suggestion-count {
+    background: #e0e0e0;
+    padding: 2px 6px;
+    border-radius: 12px;
+    font-size: 12px;
+    margin-left: 8px;
+}
+
+.show-more {
+    background: none;
+    border: none;
+    color: #0f766e;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* Navigation buttons */
+.navigation-buttons {
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+}
+
+.nav-btn {
+    padding: 8px 12px;
+    background: white;
+    border: 1px solid #e0e3e7;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #4a5568;
+    transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+    background: #f5f7fa;
+    border-color: #cbd5e0;
+}
+
+/* Tone checker */
+.tone-checker {
+    padding: 12px;
+    border-top: 1px solid #eee;
+    margin-top: 8px;
+}
+
+.tone-btn {
+    width: 100%;
+    padding: 8px;
+    background: white;
+    border: 1px solid #e0e3e7;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #4a5568;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.tone-btn:hover {
+    background: #f5f7fa;
+    border-color: #cbd5e0;
+}
+
+/* Update suggestion actions to accommodate navigation */
+/* .suggestion-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    border-top: 1px solid #eee;
+} */
+.grammar-highlight {
+    position: relative;
+    cursor: pointer;
+}
+   
+
+
+.grammar-highlight-spelling{
+    background: rgba(235, 77, 75, 0.12);
+    border-bottom: 2px dotted #EB4D4B !important;
+}
+
+.grammar-highlight-grammar{
+    background: rgba(21, 195, 154, 0.12);
+    /* border-bottom: 2px dotted #130ce0!important; */
+    border:2px solid #130ce0 !important;
+}
+
+.grammar-highlight.style{
+    background: rgba(55, 125, 255, 0.12);
+    border-bottom: 2px dotted #e1a115 !important;
+}
+
+.grammar-highlight active { 
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.grammar-tooltip {
+    position: fixed;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 12px;
+    min-width: 200px;
+    max-width: 300px;
+    z-index: 10000;
+}
+
+.tooltip-message {
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.correction-option {
+    display: block;
+    width: 100%;
+    padding: 6px 12px;
+    margin: 4px 0;
+    border: none;
+    border-radius: 4px;
+    background: #f8f9fa;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.2s;
+}
+.error-type {
+    font-size: 12px;
+    font-weight: 500;
+    color: #666;
+}
+
+.correction-option:hover {
+    background: #e9ecef;
+}
+.tooltip-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.add-dictionary-btn {
+    width: 100%;
+    padding: 6px;
+    margin-top: 8px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+}
+
+.tooltip-content {
+    display: flex;
+    flex-direction: column;
+    opacity: 1;
+    visibility: visible;
+    gap: 4px;
+}
